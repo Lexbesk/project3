@@ -8,11 +8,12 @@ public class Main {
 
         int WIDTH = 90;
         int HEIGHT = 50;
-        int SEED = 273;
-        double DEGREE = 0.5;
+        int SEED = 2904954;
+        double DEGREE = 0.6;
+        int TIME = 1;
 
         TERenderer ter = new TERenderer();
-        World world = new World(WIDTH, HEIGHT, SEED, DEGREE);
+        World world = new World(WIDTH, HEIGHT, SEED, DEGREE, TIME);
         ter.initialize(WIDTH, HEIGHT);
 
         TETile[][] worldTiles = world.getTiles();
