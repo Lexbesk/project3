@@ -1,8 +1,6 @@
 package core;
 
 import com.github.javaparser.utils.Pair;
-import net.sf.saxon.expr.Component;
-import net.sf.saxon.expr.flwor.Tuple;
 import tileengine.TETile;
 import tileengine.Tileset;
 
@@ -12,22 +10,24 @@ public class World {
 
     private int width;
     private int height;
+
+    boolean[] connected;
     private TETile[][] tiles;
-    private int seed;
+    private long seed;
     private List<Set<Pair<Integer, Integer>>> existFloors;
     private List<List<Pair<Integer, Integer>>> existFloorsList;
-    // do not add in to this list manually (need to check repeat).
     private double degree;
     private final Random RANDOM;
     private int time;
 
 
-    public World(int width, int height, int seed, double degree, int time){
+    public World(int width, int height, long seed, double degree, int time){
         this.height = height;
         this.width = width;
         this.seed = seed;
         this.degree = degree;
         this.time = time;
+        connected = new boolean[(width / 10) * (height / 10)];
         tiles = new TETile[width][height];
         for (int x = 0; x <width; x++) {
             for (int y = 0; y < height; y++) {
@@ -58,8 +58,8 @@ public class World {
     }
 
     private void generateRooms(int time) {
-        for (int j = 0; j < 5; j += 1){
-            for (int i = 0; i < 9; i += 1){
+        for (int j = 0; j < height / 10; j += 1){
+            for (int i = 0; i < width / 10; i += 1){
                 int left = RANDOM.nextInt(0, 7);
                 int right = RANDOM.nextInt(left + 2, 10);
                 int bottom = RANDOM.nextInt(0, 7);
@@ -67,13 +67,13 @@ public class World {
                 if (i == 0 && left == 0){
                     left = 1;
                 }
-                if (i == 8 && right == 9){
+                if (i == ((width/10) - 1) && right == 9){
                     right -= 1;
                 }
                 if (j == 0 && bottom == 0){
                     bottom = 1;
                 }
-                if (j == 4 && top == 9){
+                if (j == ((height/10) - 1) && top == 9){
                     top -= 1;
                 }
                 int px = 10 * i;
@@ -85,7 +85,7 @@ public class World {
                 if (RANDOM.nextInt(10) < degree * 10){
                     continue;
                 }
-                int index = i + j * 9;
+                int index = i + j * (width / 10);
                 for (int x = px + left; x <= px + right; x += 1){
                     for (int y = py + bottom; y <= py + top; y += 1){
                         tiles[x][y] = Tileset.FLOOR;
@@ -100,14 +100,11 @@ public class World {
         }
     }
 
-    boolean[] connected = new boolean[5 * 9];
-
     private boolean connectRooms(){
         Arrays.fill(connected, false);
-        connected[0] = true;
         int root = -1;
 
-        for (int i = 0; i < 5 * 9; i += 1){
+        for (int i = 0; i < (width / 10) * (height / 10); i += 1){
             if (existFloors.get(i).isEmpty()){
                 connected[i] = true;
             } else if (root == -1){
@@ -152,13 +149,13 @@ public class World {
     }
 
     private List<Integer> neighbors(int i){
-        int x = i % 9;
-        int y = i / 9;
+        int x = i % (width / 10);
+        int y = i / (width / 10);
         List<Integer> res = new ArrayList<>();
         for (int b = -1; b <= 1; b++){
             for (int a = -1; a <= 1; a++){
-                if (!(a == 0 && b == 0) && a + x >= 0 && a + x < 9 && b + y >= 0 && b + y < 5){
-                    res.add(a + x + 9 * (b + y));
+                if (!(a == 0 && b == 0) && a + x >= 0 && a + x < (width / 10) && b + y >= 0 && b + y < (height / 10)){
+                    res.add(a + x + (width / 10) * (b + y));
                 }
             }
         }

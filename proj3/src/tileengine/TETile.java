@@ -23,10 +23,10 @@ import utils.RandomUtils;
 
 public class TETile {
     private final char character; // Do not rename character or the autograder will break.
-    private final Color textColor;
-    private final Color backgroundColor;
+    public Color textColor;
+    public Color backgroundColor;
     private final String description;
-    private final String filepath;
+    public String filepath;
 
     /**
      * Full constructor for TETile objects.

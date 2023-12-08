@@ -83,19 +83,73 @@ public class TERenderer {
      * the screen in tiles.
      * @param world the 2D TETile[][] array to render
      */
-    public void renderFrame(TETile[][] world) {
+    public void renderFrame(TETile[][] world, TETile[][] layer, double[][] lightLayer, int xOff, int yOff, boolean lightUp) {
         int numXTiles = world.length;
         int numYTiles = world[0].length;
-        StdDraw.clear(new Color(0, 0, 0));
         for (int x = 0; x < numXTiles; x += 1) {
             for (int y = 0; y < numYTiles; y += 1) {
                 if (world[x][y] == null) {
                     throw new IllegalArgumentException("Tile at position x=" + x + ", y=" + y
                             + " is null.");
                 }
-                world[x][y].draw(x + xOffset, y + yOffset);
+                if (x + xOff >= 0 && x + xOff < width && y + yOff >= 0 && y + yOff < height) {
+                    if (lightUp){
+                        world[x][y].draw(x + xOff, y + yOff);
+                    } else {
+                        Color color = world[x][y].backgroundColor;
+                        int blue = color.getBlue();
+                        int red = color.getRed();
+                        int green = color.getGreen();
+                        blue = (int) Math.round(blue * lightLayer[x][y]);
+                        red = (int) Math.round(red * lightLayer[x][y]);
+                        green = (int) Math.round(green * lightLayer[x][y]);
+                        world[x][y].backgroundColor = new Color(red, green, blue);
+                        Color text_color = world[x][y].textColor;
+                        int text_blue = text_color.getBlue();
+                        int text_red = text_color.getRed();
+                        int text_green = text_color.getGreen();
+                        text_blue = (int) Math.round(text_blue * lightLayer[x][y]);
+                        text_red = (int) Math.round(text_red * lightLayer[x][y]);
+                        text_green = (int) Math.round(text_green * lightLayer[x][y]);
+                        world[x][y].textColor = new Color(text_red, text_green, text_blue);
+                        String filepath = world[x][y].filepath;
+//                    world[x][y].filepath = null;
+                        world[x][y].draw(x + xOff, y + yOff);
+                        world[x][y].backgroundColor = color;
+                        world[x][y].textColor = text_color;
+//                    world[x][y].filepath = filepath;
+                    }
+                    if (layer[x][y] != null){
+                        if (lightUp){
+                            layer[x][y].draw(x + xOff, y + yOff);
+                        } else {
+                            Color color1 = layer[x][y].backgroundColor;
+                            int blue1 = color1.getBlue();
+                            int red1 = color1.getRed();
+                            int green1 = color1.getGreen();
+                            blue1 = (int) Math.round(blue1 * lightLayer[x][y]);
+                            red1 = (int) Math.round(red1 * lightLayer[x][y]);
+                            green1 = (int) Math.round(green1 * lightLayer[x][y]);
+                            layer[x][y].backgroundColor = new Color(red1, green1, blue1);
+                            Color text_color1 = layer[x][y].textColor;
+                            int text_blue1 = text_color1.getBlue();
+                            int text_red1 = text_color1.getRed();
+                            int text_green1 = text_color1.getGreen();
+                            text_blue1 = (int) Math.round(text_blue1 * lightLayer[x][y]);
+                            text_red1 = (int) Math.round(text_red1 * lightLayer[x][y]);
+                            text_green1 = (int) Math.round(text_green1 * lightLayer[x][y]);
+                            layer[x][y].textColor = new Color(text_red1, text_green1, text_blue1);
+                            String filepath1 = world[x][y].filepath;
+//                    world[x][y].filepath = null;
+                            layer[x][y].draw(x + xOff, y + yOff);
+                            layer[x][y].backgroundColor = color1;
+                            layer[x][y].textColor = text_color1;
+//                    world[x][y].filepath = filepath;
+                        }
+                    }
+                }
             }
         }
-        StdDraw.show();
     }
+
 }
