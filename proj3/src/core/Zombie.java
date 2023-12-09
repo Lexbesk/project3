@@ -24,7 +24,7 @@ public class Zombie {
         characterLayer[x][y] = Tileset.ZOMBIE;
     }
 
-    public boolean move(TETile[][] worldTiles, TETile[][] characterLayer, boolean act){
+    public boolean move(TETile[][] worldTiles, TETile[][] characterLayer, boolean act, Main process){
         boolean alive = true;
         for (int i = -4; i <= 4; i += 1){
             for (int j = -4; j <= 4; j += 1){
@@ -50,6 +50,10 @@ public class Zombie {
             if (num == 3 && y + 1 < characterLayer[0].length && worldTiles[x][y+1] != Tileset.WALL){
                 y = y+1;
             }
+        }
+        if (characterLayer[x][y] == Tileset.AVATAR){
+            process.avatarHealth -= 1;
+            return false;
         }
         return alive;
     }

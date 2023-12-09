@@ -47,4 +47,9 @@ public class FileUtils {
     public static boolean fileExists(String filename) {
         return new File(filename).exists();
     }
+
+    public static void main(String[] arg){
+        System.out.println(FileUtils.fileExists("/Users/lebesk/Documents/CS-Courses/cs61b/project3/proj3/src/saveandload.txt"));
+        FileUtils.writeFile("/Users/lebesk/Documents/CS-Courses/cs61b/project3/proj3/src/saveandload.txt", "0");
+    }
 }

@@ -38,6 +38,7 @@ public class Tileset {
     public static final TETile EXPLODED_BOMB = new TETile(' ', Color.black, Color.blue, "exploded_bomb");
     public static final TETile ZOMBIE = new TETile('&', Color.white, Color.blue, "zombie");
     public static final TETile HUGE_TORCH = new TETile('▒', Color.yellow, Color.blue, "huge_torch");
+    public static final TETile BOSS = new TETile('#', Color.yellow, Color.blue, "huge_torch");
 }
 
 
